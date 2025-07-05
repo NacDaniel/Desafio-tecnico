@@ -31,6 +31,9 @@ class userController
                 $this->request_delete($path, $id);
                 return;
             }
+
+            throw new Exception("Método não aceito.");
+
         } catch (Exception $e) {
             $this->response(["code" => 404, "message" => $e->getMessage()]);
         }
