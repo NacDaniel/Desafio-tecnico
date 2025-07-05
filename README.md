@@ -17,7 +17,7 @@
 #### Adiciona um usuário
 
 ```http
-  POST /usuario
+  DELETE /usuario
 ```
 
 Corpo da requisição
