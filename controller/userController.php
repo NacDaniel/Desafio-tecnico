@@ -68,7 +68,9 @@ class userController
                 $this->response(["code" => 400, "message" => "Informe o ID do usuário."]);
                 return;
             }
-            $this->response(["code" => 200, "message" => "Usuário deletado."]);
+            if (userModel::getInstance()->deleteUser($id)) {
+                $this->response(["code" => 200, "message" => "Usuário deletado."]);
+            }
         }
     }
 

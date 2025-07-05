@@ -72,6 +72,12 @@ class userModel
 
     public function deleteUser($id): bool
     {
+        $this->con->query("DELETE FROM users WHERE id = $id");
+
+        if ($this->con->affected_rows < 1) {
+            throw new Exception("Falha ao deletar o usuário");
+        }
+        
         return true;
     }
 
