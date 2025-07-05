@@ -1,6 +1,7 @@
 <?php
 
 require "./view/userView.php";
+require "./model/userModel.php";
 
 class userController
 {
@@ -14,19 +15,24 @@ class userController
         $path = strtoupper($url[0]);
         $id = $url[1] ?? null;
 
-        if ($methodType === "GET") {
-            $this->request_get($path, $id);
-            return;
-        }
+        try {
 
-        if ($methodType === "POST") {
-            $this->request_post($url, $argsURL);
-            return;
-        }
+            if ($methodType === "GET") {
+                $this->request_get($path, $id);
+                return;
+            }
 
-        if ($methodType === "DELETE") {
-            $this->request_delete($url, $argsToarray["user"] ?? null);
-            return;
+            if ($methodType === "POST") {
+                $this->request_post($url, $argsURL);
+                return;
+            }
+
+            if ($methodType === "DELETE") {
+                $this->request_delete($url, $argsToarray["user"] ?? null);
+                return;
+            }
+        } catch (Exception $e) {
+            $this->response(["code" => 404, "message" => $e->getMessage()]);
         }
 
     }
@@ -34,7 +40,12 @@ class userController
     private function request_get($path, $userID): void
     {
         if ($path === "USUARIO") {
-            $this->response(["code" => 200, "message" => "Sucesso ao obter os dados.", "data" => []]);
+            $data = userModel::getInstance()->getUser($userID) ?? [];
+            if (!$data) {
+                $this->response(["code" => 404, "message" => "Usuário(s) não encontrado(s)."]);
+                return;
+            }
+            $this->response(["code" => 200, "message" => "Sucesso ao obter os dados.", "data" => $data]);
         } else if ($path === "") {
             // reqs do html
         } else {
