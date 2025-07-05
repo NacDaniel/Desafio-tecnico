@@ -17,7 +17,7 @@
 #### Adiciona um usuário
 
 ```http
-  DELETE /usuario
+  PUT /usuario
 ```
 
 Corpo da requisição
@@ -32,6 +32,6 @@ Corpo da requisição
 #### Deletar um usuário
 
 ```http
-  POST /usuario/{id}
+  DELETE /usuario/{id}
 ```
 
