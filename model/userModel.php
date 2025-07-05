@@ -38,7 +38,25 @@ class userModel
             throw new Exception("Conexão com o banco de dados não está aberta! Tente novamente.");
         }
 
-        return [];
+        $query = "SELECT * FROM users";
+        if ($id) {
+            $query .= " WHERE id = " . $id;
+        }
+        $query = $this->con->query($query);
+        if (!$query) {
+            throw new Exception("Falha ao obter usuários.");
+        }
+
+        return $this->iterateUsersDatabase($query);
+    }
+
+    private function iterateUsersDatabase($queryResult)
+    {
+        $data = [];
+        while ($row = mysqli_fetch_array($queryResult, MYSQLI_ASSOC)) {
+            array_unshift($data, $row);
+        }
+        return $data;
     }
 
     public function insertUser($data = []): bool|int
