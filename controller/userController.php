@@ -23,12 +23,12 @@ class userController
             }
 
             if ($methodType === "POST") {
-                $this->request_post($url, $argsURL);
+                $this->request_post($path, $argsURL);
                 return;
             }
 
             if ($methodType === "DELETE") {
-                $this->request_delete($url, $argsToarray["user"] ?? null);
+                $this->request_delete($path, $id);
                 return;
             }
         } catch (Exception $e) {
