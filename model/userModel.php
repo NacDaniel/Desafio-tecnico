@@ -106,40 +106,29 @@ class userModel
         if (!is_numeric($id)) {
             throw new Exception("o ID deve ser um número.");
         }
-
-        $query = $this->getQueryUpdateUser($id, $data);
-        $this->con->query($query);
-        if ($this->con->affected_rows < 1) {
-            throw new Exception("Ocorreu um erro ao tentar atualizar esse usuário.");
+        if (key_exists("id", $data)) {
+            throw new Exception("Você não pode atualizar o id do usuário.");
         }
 
-        return true;
+        return $this->prepareAndUpdateUser($id, $data);
     }
 
-    private function getQueryUpdateUser($id, $data)
+    function prepareAndUpdateUser($id, $data)
     {
         $query = "UPDATE users SET ";
-        $i = 0;
-        $listToSQL = [];
-        foreach ($data as $k => $v) {
-            if ($k == "id") {
-                throw new Exception("Você não pode atualizar o id do usuário.");
-            }
-
-            $i++;
-            if ($i - 1 != count($data) && $i != 1) {
-                $query .= ", ";
-            }
-            $query .= "$k = \"%s\"";
-            array_push($listToSQL, is_numeric($v) ? $v : $this->con->real_escape_string($v));
-        }
-
-        $query .= " WHERE ID=%s";
-        array_push($listToSQL, $id);
-        $query = sprintf($query, ...$listToSQL);
-        return $query;
+        $query .= implode(", ", array_map(function ($key) {
+            return "$key = ?";
+        }, array_keys($data)));
+        $prepare = $this->con->prepare("$query WHERE id = ?");
+        $values = array_values($data);
+        array_push($values, $id);
+        $keyCount = str_repeat("s", count($values));
+        $prepare->bind_param($keyCount, ...$values);
+        $prepare->execute();
+        $affected_rows = $prepare->affected_rows;
+        $prepare->close();
+        return $affected_rows > 0;
     }
-
 
     public function deleteUser($id): bool
     {
