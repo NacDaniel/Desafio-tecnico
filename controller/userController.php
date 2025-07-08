@@ -16,14 +16,15 @@ class userController
         $id = $url[1] ?? null;
 
         try {
-
+            $body = file_get_contents('php://input');
+            $body = json_decode($body != "" ? $body : "[]", true);
             if ($methodType === "GET") {
                 $this->request_get($path, $id);
                 return;
             }
 
             if ($methodType === "POST") {
-                $this->request_post($path, $argsURL);
+                $this->request_post($path, $id, $body);
                 return;
             }
 
