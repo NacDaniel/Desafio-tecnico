@@ -66,7 +66,44 @@ class userModel
 
     public function updateUser($id, $data = []): bool
     {
+        if ($id == null) {
+            throw new Exception("Um ID deve ser passado como parâmetro na URL.");
+        }
+        if (!is_numeric($id)) {
+            throw new Exception("o ID deve ser um número.");
+        }
+
+        $query = $this->getQueryUpdateUser($id, $data);
+        $this->con->query($query);
+        if ($this->con->affected_rows < 1) {
+            throw new Exception("Ocorreu um erro ao tentar atualizar esse usuário.");
+        }
+
         return true;
+    }
+
+    private function getQueryUpdateUser($id, $data)
+    {
+        $query = "UPDATE users SET ";
+        $i = 0;
+        $listToSQL = [];
+        foreach ($data as $k => $v) {
+            if ($k == "id") {
+                throw new Exception("Você não pode atualizar o id do usuário.");
+            }
+
+            $i++;
+            if ($i - 1 != count($data) && $i != 1) {
+                $query .= ", ";
+            }
+            $query .= "$k = \"%s\"";
+            array_push($listToSQL, is_numeric($v) ? $v : $this->con->real_escape_string($v));
+        }
+
+        $query .= " WHERE ID=%s";
+        array_push($listToSQL, $id);
+        $query = sprintf($query, ...$listToSQL);
+        return $query;
     }
 
 
@@ -77,7 +114,7 @@ class userModel
         if ($this->con->affected_rows < 1) {
             throw new Exception("Falha ao deletar o usuário");
         }
-        
+
         return true;
     }
 
