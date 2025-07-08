@@ -17,10 +17,25 @@
 #### Adiciona um usuário
 
 ```http
-  PUT /usuario
+  POST /usuario
 ```
 
 Corpo da requisição
+| Parâmetro  | Tipo | Descrição |
+| :---------- | :--------- | :------------------------------------------ |
+| `fullname`      | `String` | **Obrigatório**. Nome completo do usuário |
+| `birthday`      | `String` | **Obrigatório**. Timestamp da data de nascimento do usuário|
+| `bio`      | `String` | **Obrigatório**. Biografia do usuário|
+| `address`      | `String` | **Obrigatório**. Endereço do Usuário. Separe por ponto e vírgula. Rua Tenente Dias; 20; Recife; Pernambuco; Brasil
+| `imageURL`      | `String` | **Obrigatório**. URL da imagem. Preferenciamente no Google Drive|
+
+#### Atualiza um usuário
+
+```http
+  POST /usuario/{id}
+```
+
+Parâmetros opcionais a serem passados no corpo da requisição. (Ao menos um deve ser informado)
 | Parâmetro  | Tipo | Descrição |
 | :---------- | :--------- | :------------------------------------------ |
 | `fullname`      | `String` | **Obrigatório**. Nome completo do usuário |
