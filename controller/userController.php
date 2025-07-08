@@ -57,11 +57,27 @@ class userController
         }
     }
 
-    private function request_post($path, $data = []): void
+    private function request_post($path, $id, $body = []): void
     {
-        echo $path;
+        if (empty($body)) {
+            throw new Exception("A requisição deve ter um corpo com as informações a serem adicionadas/atualizadas.");
+        }
+
         if ($path === "USUARIO") {
 
+            if ($id) {
+                $req = userModel::getInstance()->updateUser($id, $body);
+                return;
+            }
+
+            if (!(array_key_exists("fullname", $body) && array_key_exists("birthday", $body) && array_key_exists("bio", $body) && array_key_exists("bio", $body) && array_key_exists("address", $body) && array_key_exists("imageURL", $body))) {
+                throw new Exception("A requisição deve passar em seu corpo informações como: 'fullname', 'birthday', 'bio', 'address', 'imageURL'");
+            }
+
+            $req = userModel::getInstance()->insertUser($body);
+
+        } else {
+            $this->response(["code" => 404, "message" => "Página não encontrada."]);
         }
     }
 
