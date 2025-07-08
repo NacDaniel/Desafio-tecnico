@@ -38,17 +38,15 @@ class userModel
             throw new Exception("Conexão com o banco de dados não está aberta! Tente novamente.");
         }
 
-        $query = "SELECT * FROM users";
-        if ($id) {
-            $query .= " WHERE id = " . $id;
-        }
-        $query = $this->con->query($query);
+        $query = $this->con->query("SELECT * FROM users" . ($id ? " WHERE id = $id" : ""));
         if (!$query) {
             throw new Exception("Falha ao obter usuários.");
         }
 
         return $this->iterateUsersDatabase($query);
     }
+
+
 
     private function iterateUsersDatabase($queryResult)
     {
