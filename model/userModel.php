@@ -64,7 +64,7 @@ class userModel
         return true;
     }
 
-    public function updateUser($data = []): bool
+    public function updateUser($id, $data = []): bool
     {
         return true;
     }
@@ -84,6 +84,10 @@ class userModel
     public function deleteInstance()
     {
         // fechar conexão do BD antes
+        if ($this->con) {
+            $this->con->close();
+            $this->con = null;
+        }
         self::$instance = null;
     }
 
@@ -92,7 +96,6 @@ class userModel
         if ($this->con) {
             $this->con->close();
         }
-        // fechar instancia do banco de dados
     }
 }
 
