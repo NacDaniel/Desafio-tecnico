@@ -59,7 +59,43 @@ class userModel
 
     public function insertUser($data = []): bool|int
     {
-        return true;
+        $this->checkDataRegistry($data); // lança exception caso apresente algum "problema"
+
+        // deletar depois. Até funciona, mas impede de chamar o método que escapa as strings
+        //$query = sprintf("INSERT INTO users(" . implode(",", array_keys($data)) . ") VALUES(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\")", ...array_values($data));
+
+        $prepare = $this->con->prepare("INSERT INTO users(fullname,birthday,bio,address,imageURL) values(?,?,?,?,?)");
+        $prepare->bind_param("sssss", $data["fullname"], $data["birthday"], $data["bio"], $data["address"], $data["imageURL"]);
+        $prepare->execute();
+        $idGenerated = $prepare->insert_id;
+        $prepare->close();
+        return $idGenerated;
+    }
+
+    private function checkDataRegistry($data)
+    {
+        //fullname
+        if (strlen($data["fullname"]) < 5) {
+            throw new Exception("Campo 'fullname' deve ter no mínimo 5 caracteres.");
+        }
+        //birthday
+        $date = explode('/', trim($data["birthday"], '/'));
+        if (count($date) < 3) {
+            throw new Exception("Campo 'birthday' não está correto. Informe Dia/Mes/Ano.");
+        }
+        list($dia, $mes, $ano) = $date;
+        if (!checkdate((int) $mes, (int) $dia, (int) $ano)) {
+            throw new Exception("Campo 'birthday' não recebeu uma data válida.");
+        }
+        if (strlen($data["bio"]) < 5) {
+            throw new Exception("Campo 'bio' deve ter no mínimo 5 caracteres.");
+        }
+        if (strlen($data["address"]) < 5) {
+            throw new Exception("Campo 'address' deve ter no mínimo 5 caracteres.");
+        }
+        if (strlen($data["imageURL"]) < 5) {
+            throw new Exception("Campo 'address' deve ter no mínimo 5 caracteres.");
+        }
     }
 
     public function updateUser($id, $data = []): bool
