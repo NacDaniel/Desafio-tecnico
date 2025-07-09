@@ -67,6 +67,11 @@ class userController
 
             if ($id) {
                 $req = userModel::getInstance()->updateUser($id, $body);
+                if ($req) {
+                    $this->response(["code" => 200, "message" => "Usuário atualizado com sucesso"]);
+                } else {
+                    $this->response(["code" => 400, "message" => "Não foi possível atualizar esse usuário."]);
+                }
                 return;
             }
 
@@ -75,6 +80,9 @@ class userController
             }
 
             $req = userModel::getInstance()->insertUser($body);
+            if ($req) {
+                $this->response(["code" => 200, "message" => "Usuário adicionado com sucesso!", "ID" => $req]);
+            }
 
         } else {
             $this->response(["code" => 404, "message" => "Página não encontrada."]);
@@ -89,8 +97,10 @@ class userController
                 return;
             }
             if (userModel::getInstance()->deleteUser($id)) {
-                $this->response(["code" => 200, "message" => "Usuário deletado."]);
+                $this->response(["code" => 200, "message" => "Usuário foi deletado com sucesso."]);
             }
+        } else {
+            $this->response(["code" => 404, "message" => "Página não encontrada."]);
         }
     }
 
