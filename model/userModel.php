@@ -38,12 +38,22 @@ class userModel
             throw new Exception("Conexão com o banco de dados não está aberta! Tente novamente.");
         }
 
-        $query = $this->con->query("SELECT * FROM users" . ($id ? " WHERE id = $id" : ""));
-        if (!$query) {
+        $result = false;
+        if ($id) {
+            $prepare = $this->con->prepare("SELECT * FROM users WHERE id = ?");
+            $prepare->bind_param("i", $id);
+            $prepare->execute();
+            $result = $prepare->get_result();
+            $prepare->close();
+        } else {
+            $result = $this->con->query("SELECT * FROM users");
+        }
+
+        if (!$result) {
             throw new Exception("Falha ao obter usuários.");
         }
 
-        return $this->iterateUsersDatabase($query);
+        return $this->iterateUsersDatabase($result);
     }
 
 
@@ -51,7 +61,7 @@ class userModel
     private function iterateUsersDatabase($queryResult)
     {
         $data = [];
-        while ($row = mysqli_fetch_array($queryResult, MYSQLI_ASSOC)) {
+        while ($row = $queryResult->fetch_assoc()) {
             array_unshift($data, $row);
         }
         return $data;
