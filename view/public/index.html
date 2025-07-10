@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel do usuário</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./script.js"></script>
+
+    <link rel="stylesheet" href="./view/style.css" />
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <h4 class="navbar-brand">Painel de gerenciamento</h4>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Meu perfil</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid my-5 px-4">
+        <div class="table-responsive">
+            <table id="table" class="table table-hover w-100 align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome completo</th>
+                        <th>Data de nascimento</th>
+                        <th>Biografia</th>
+                        <th>Endereço</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tbodi">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modalURLImage" >
+        <div class="modal fade" id="modalURLImage" tabindex="-1" aria-labelledby="modalURLImageLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalURLImageLabel">Editar usuário</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <form>
+                        <div class="modal-body">
+                            <div class="fotoPerfil d-flex justify-content-center mb-3">
+                                <img id="elementfotoPerfil"
+                                    src="https://ichef.bbci.co.uk/ace/ws/640/amz/worldservice/live/assets/images/2015/09/26/150926165742__85730600_monkey2.jpg.webp"
+                                    alt="Foto do usuário" class="rounded-circle border border-danger img-fluid"
+                                    style="max-width: 160px; height: auto;" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nomeCompleto" class="form-label">Nome completo</label>
+                                <input type="text" class="form-control" id="nomeCompleto" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="dataNascimento" class="form-label">Data de nascimento</label>
+                                <input type="date" class="form-control" id="dataNascimento" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="endereco" class="form-label">Endereço</label>
+                                <input type="text" class="form-control" id="endereco" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="biografia" class="form-label">Biografia</label>
+                                <textarea class="form-control" id="biografia" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" id="finalizarUsuario" class="btn btn-primary">Finalizar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalLinkImagem" tabindex="-1" aria-labelledby="modalLinkImagemLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLinkImagemLabel">Alterar Foto de Perfil</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="inputLinkImagem" class="form-label">Insira o link da nova
+                            imagem:</label>
+                        <input type="url" class="form-control" id="inputLinkImagem"
+                            placeholder="https://exemplo.com/imagem.jpg" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="btnSalvarImagem">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .fotoPerfil:hover img {
+            opacity: 0.2;
+        }
+
+        td.limit-text {
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .limit-text:hover {
+            cursor: default
+        }
+
+        .editButton:hover {
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+
+            requestGET()
+
+            $("#finalizarUsuario").on("click", function () {
+
+            })
+
+            $(document).on("click", ".editButton", function () {
+                tr = $(this).closest("tr")
+                data = bodyList[tr.data("id")]
+                if (data) {
+                    editing = data
+                    $('#modalURLImage').modal('show')
+                    updateEditModal(editing)
+                } else {
+                    alert("Erro ao achar ID")
+                }
+            })
+
+            $(".fotoPerfil").on("click", function () {
+                if (editing) {
+                    $("#inputLinkImagem").val(editing.imageURL)
+                    $('#modalLinkImagem').modal('show')
+                }
+            })
+
+            $("#btnSalvarImagem").on('click', function (event) {
+                editing.imageURL = $("#inputLinkImagem").val()
+                $("#elementfotoPerfil").attr("src", editing.imageURL);
+                $('#modalLinkImagem').modal('hide')
+            });
+
+            $('.modal').on('hidden.bs.modal', function () {
+                if (this.id == "modalURLImage") {
+                    // chamar método para atualizar a lista
+                }
+            });
+
+        })
+
+        bodyList = []
+
+        lorem = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor atque quae quia esse aliasnatus vitae voluptates odit, reiciendis inventore doloremque nobis eligendi iusto illo estsimilique accusamus recusandae delectus."
+
+        function insertData(usuarios) {
+            /*usuarios = [
+                { id: 1, fullname: 'Nome completo da silva', birthday: '2025-10-20', bio: lorem, address: 'Rua sem nome, número, Cidade, Estado - País', imageURL: 'https://ichef.bbci.co.uk/ace/ws/640/amz/worldservice/live/assets/images/2015/09/26/150926165742__85730600_monkey2.jpg.webp' },
+                { id: 2, fullname: 'Nome completo da silva', birthday: '2025-10-20', bio: lorem, address: 'Rua sem nome, número, Cidade, Estado - País', imageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpfOrHWHIKmVFphXBNvL-yLhZy-tCoFlZzcA&s' },
+            ];*/
+            usuarios.forEach(element => {
+                insertRow(element)
+                bodyList[element.id] = element
+            });
+
+        }
+
+        function insertRow(data) {
+            const $tbody = $("#tbodi");
+            const $row = $('<tr data-id=' + data.id + '></tr>');
+            $row.append('<td>' + data.id + '</td>');
+            $row.append('<td>' + data.fullname + '</td>');
+            $row.append('<td>' + formatDateToBR(data.birthday) + '</td>');
+            $row.append('<td class="limit-text" title="' + data.bio + '">' + data.bio + '</td>');
+            $row.append('<td>' + data.address + '</td>');
+            $row.append('<td class="editButton"><span class="badge bg-success">Editar</span></td>');
+            $tbody.append($row);
+        }
+
+        function updateEditModal(data) {
+            $("#nomeCompleto").val(data.fullname)
+            $("#dataNascimento").val(data.birthday)
+            $("#biografia").val(data.bio)
+            $("#endereco").val(data.address)
+            $("#elementfotoPerfil").attr("src", data.imageURL);
+        }
+
+        function formatDateToBR(date) {
+            daSplit = date.split("-")
+
+            if (daSplit) {
+                return daSplit[2] + "/" + daSplit[1] + "/" + daSplit[0]
+            }
+
+            return date
+        }
+
+        function requestGET() {
+            $.ajax({
+                accepts: 'application/json',
+                type: "GET",
+                dataType: "JSON",
+                url: "http://localhost:8000/usuario/",
+                statusCode: {
+                    404: function () {
+                        alert("Página não encontrada")
+                    },
+                }
+            }).done(function (response) {
+                insertData(response.data)
+            }).fail(function (jqXHR, textStatus) {
+                console.log(jqXHR)
+                alert("falhou")
+            });
+        }
+
+    </script>
+</body>
+
+</html>
