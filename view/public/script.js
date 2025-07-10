@@ -133,8 +133,8 @@ function requestGET() {
         dataType: "JSON",
         url: "/usuario/",
         statusCode: {
-            404: function () {
-                alert("Página não encontrada")
+            404: function (jqXHR) {
+                alert(jqXHR.responseJSON.message)
             },
         }
     }).done(function (response) {
