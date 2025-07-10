@@ -3,6 +3,8 @@
 require "./view/userView.php";
 require "./model/userModel.php";
 
+header("Access-Control-Allow-Origin: *"); // Permitir requisições de origens diferentes.
+
 class userController
 {
     public function __construct($data)
@@ -51,7 +53,7 @@ class userController
             }
             $this->response(["code" => 200, "message" => "Sucesso ao obter os dados.", "data" => $data]);
         } else if ($path === "") {
-            // reqs do html
+            userView::getInstance()->loadIndex();
         } else {
             $this->response(["code" => 404, "message" => "Página não encontrada."]);
         }
@@ -113,7 +115,6 @@ class userController
     }
 
 }
-
 
 new userController($_SERVER);
 ?>
