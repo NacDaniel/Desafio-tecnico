@@ -70,7 +70,7 @@ class userModel
     public function insertUser($data = []): bool|int
     {
         $this->checkDataRegistry($data); // lança exception caso apresente algum "problema"
-
+        $data["birthday"] = DateTime::createFromFormat('d-m-Y', $data["birthday"])->format("Y-m-d");
         // deletar depois. Até funciona, mas impede de chamar o método que escapa as strings
         //$query = sprintf("INSERT INTO users(" . implode(",", array_keys($data)) . ") VALUES(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\")", ...array_values($data));
 
@@ -89,9 +89,9 @@ class userModel
             throw new Exception("Campo 'fullname' deve ter no mínimo 5 caracteres.");
         }
         //birthday
-        $date = explode('/', trim($data["birthday"], '/'));
+        $date = explode('-', trim($data["birthday"], '-'));
         if (count($date) < 3) {
-            throw new Exception("Campo 'birthday' não está correto. Informe Dia/Mes/Ano.");
+            throw new Exception("Campo 'birthday' não está correto. Informe Dia-Mes-Ano.");
         }
         list($dia, $mes, $ano) = $date;
         if (!checkdate((int) $mes, (int) $dia, (int) $ano)) {
