@@ -1,0 +1,20 @@
+ #elementfotoPerfil:hover {
+     opacity: 0.2;
+ }
+
+ td.limit-text {
+     max-width: 250px;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     position: relative;
+     cursor: pointer;
+ }
+
+ .limit-text:hover {
+     cursor: default
+ }
+
+ .editButton:hover {
+     cursor: pointer;
+ }
