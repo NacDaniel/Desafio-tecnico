@@ -49,11 +49,7 @@ class userController
     {
         if ($path === "USUARIO") {
             $data = userModel::getInstance()->getUser($userID) ?? [];
-            if (!$data) {
-                $this->response(["code" => 404, "message" => "Usuário(s) não encontrado(s)."]);
-                return;
-            }
-            $this->response(["code" => 200, "message" => "Sucesso ao obter os dados.", "data" => $data]);
+            $this->response(["code" => 200, "message" => "Sucesso ao obter os dados.", "data" => $data ?? []]);
         } else if ($path === "") {
             userView::getInstance()->loadIndex();
         } else {
