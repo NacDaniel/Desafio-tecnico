@@ -28,7 +28,7 @@ class userModel
             //    throw new Exception("Falha ao criar a tabela de números");
             //  }
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            throw new Exception("Falha ao conectar no banco de dados.");
         }
     }
 
