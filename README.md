@@ -1,33 +1,60 @@
-![](https://i.imgur.com/pjtwSWS.png)
+## Como rodar o projeto localmente com Docker Compose
+Este projeto utiliza Docker Compose para orquestrar a aplicação e o banco de dados MySQL. As portas padrão utilizadas são:
+
+- **Aplicação (HTTP):** porta `80`
+- **Banco de dados (MySQL):** porta `3306`
+
+Para iniciar o projeto, execute o comando abaixo:
+
+#### Comando
+
+```bash
+sudo docker compose up -d --build
+```
 
 
 ## Documentação da API
 
-#### Retorna todos os usuários
+Projeto hospedado temporariamente no url http://listausuarios.infy.uk/
 
-```http
-  GET /usuario
-```
+### Endpoints disponíveis
 
-#### Retorna um único usuário
+| Método | Rota            | Descrição                       |
+|--------|------------------|----------------------------------|
+| GET    | /usuario         | Lista todos os usuários         |
+| GET    | /usuario/{id}    | Retorna dados de um usuário     |
+| POST   | /usuario         | Cria um novo usuário            |
+| POST   | /usuario/{id}    | Atualiza um usuário existente   |
+| DELETE | /usuario/{id}    | Remove um usuário               |
 
-```http
-  GET /usuario/${id}
-```
 #### Adiciona um usuário
-
 ```http
-  PUT /usuario
+  POST /usuario/
 ```
 
-Corpo da requisição
 | Parâmetro  | Tipo | Descrição |
 | :---------- | :--------- | :------------------------------------------ |
 | `fullname`      | `String` | **Obrigatório**. Nome completo do usuário |
-| `birthday`      | `String` | **Obrigatório**. Timestamp da data de nascimento do usuário|
+| `birthday`      | `String` | **Obrigatório**. Data de nascimento no formato Dia-Mes-Ano|
 | `bio`      | `String` | **Obrigatório**. Biografia do usuário|
-| `address`      | `String` | **Obrigatório**. Endereço do Usuário. Separe por ponto e vírgula. Rua Tenente Dias; 20; Recife; Pernambuco; Brasil
-| `imageURL`      | `String` | **Obrigatório**. URL da imagem. Preferenciamente no Google Drive|
+| `address`      | `String` | **Obrigatório**. Endereço do Usuário. 
+| `imageURL`      | `String` | **Obrigatório**. URL da imagem. |
+
+#### Atualiza um usuário
+
+```http
+  POST /usuario/{id}
+```
+
+Parâmetros opcionais a serem passados no corpo da requisição. (Ao menos um deve ser informado)
+
+| Parâmetro  | Tipo | Descrição |
+| :---------- | :--------- | :------------------------------------------ |
+ | `fullname`      | `String` | **Opcional**. Nome completo do usuário |
+| `birthday`      | `String` | **Opcional**. Data de nascimento no formato Dia-Mes-Ano|
+| `bio`      | `String` | **Opcional**. Biografia do usuário|
+| `address`      | `String` | **Opcional**. Endereço do Usuário. 
+| `imageURL`      | `String` | **Opcional**. URL da imagem. |
 
 #### Deletar um usuário
 
@@ -35,3 +62,13 @@ Corpo da requisição
   DELETE /usuario/{id}
 ```
 
+
+
+
+
+
+
+
+
+
+![](https://i.imgur.com/pjtwSWS.png)
