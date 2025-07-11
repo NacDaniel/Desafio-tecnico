@@ -1,7 +1,9 @@
 <?php
 
-require "./view/userView.php";
-require "./model/userModel.php";
+require_once __DIR__ . "/../view/userView.php";
+require_once __DIR__ . "/../model/userModel.php";
+
+
 
 header("Access-Control-Allow-Origin: *"); // Permitir requisições de origens diferentes.
 
